@@ -10,6 +10,7 @@ import UIKit
 import MessageKit
 import JGProgressHUD
 import InputBarAccessoryView
+
 struct Message:MessageType {
     public var sender: SenderType
     public var messageId: String
@@ -115,7 +116,6 @@ class ChatViewController: MessagesViewController {
         messageInputBar.inputTextView.becomeFirstResponder()
         if let conversationID = conversationID {
             listenerForMessages(id: conversationID, shouldScrollToButton: true)
-
         }
     }
     private func listenerForMessages(id:String,shouldScrollToButton:Bool){
@@ -129,13 +129,12 @@ class ChatViewController: MessagesViewController {
                 self?.messeges = resmessage
                 DispatchQueue.main.async {
                     if shouldScrollToButton{
-                        self?.messagesCollectionView.scrollToLastItem()
+                        //MARK: - ###########
+                        self?.messagesCollectionView.reloadDataAndKeepOffset()
                     }else{
                     self?.messagesCollectionView.reloadDataAndKeepOffset()
-
                     }
                 }
-                
             case .failure(let err):
                 print("err get messages:  \(err)")
             }
@@ -160,21 +159,19 @@ extension ChatViewController:InputBarAccessoryViewDelegate{
                 }else{
                     print("err")
                 }
-                guard let conversationID = self?.conversationID,
-                    let name = self?.title
-                    else {return}
-                DatabaseManager.shared.sendMessages(to: conversationID,name: name,newMessage: message,compition: { (success) in
-                    if success{
-                        print("sendMessages")
-                    }else{
-                        print("sendMessages err")
-                    }
-                })
-                
+
             }
-            
         }else{
-            
+            guard let conversationID = self.conversationID,
+                let name = self.title
+                else {return}
+            DatabaseManager.shared.sendMessages(to: conversationID,name: name,newMessage: message,compition: { (success) in
+                if success{
+                    print("sendMessages")
+                }else{
+                    print("sendMessages err")
+                }
+            })
         }
     }
     private func createMessageId() -> String?{
@@ -198,7 +195,6 @@ extension ChatViewController:MessagesDataSource,MessagesLayoutDelegate,MessagesD
             return sender
         }
         fatalError("self sender is nil")
-        return Sender(photoURL: "", senderId: "89", displayName: "")
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
@@ -211,3 +207,9 @@ extension ChatViewController:MessagesDataSource,MessagesLayoutDelegate,MessagesD
     
     
 }
+
+
+
+
+
+//

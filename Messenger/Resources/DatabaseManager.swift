@@ -273,7 +273,7 @@ extension DatabaseManager{
     //MARK: - getAllConversation
     public func getAllConversation(for email:String,complition:@escaping (Result<[Conversation],Error>)->Void){
         
-        database.child("\(email)/conversation").observe(.value) { (snapshoot) in
+        database.child("\(email)/conversations").observe(.value) { (snapshoot) in
             guard let value = snapshoot.value as? [[String:Any]] else {
                 complition(.failure(DataBaseError.feildToFetch))
                 return
@@ -334,8 +334,11 @@ extension DatabaseManager{
         }
         
     }
+    //MARK: - sendMessages
     public func sendMessages(to conversation:String,name:String,newMessage:Message,compition:@escaping (Bool)->Void){
-        self.database.child("\(conversation)/messages").observeSingleEvent(of: .value) { [weak self](snapshoot) in
+        
+        database.child("\(conversation)/messages").observeSingleEvent(of: .value) { [weak self](snapshoot) in
+            
             guard var currentmessages = snapshoot.value as? [[String:Any]] else {
                 compition(false)
                 return
@@ -384,6 +387,7 @@ extension DatabaseManager{
                 "name":name
             ]
             currentmessages.append(newMessageEntry)
+            
             self?.database.child("\(conversation)/messages").setValue(currentmessages) { (err, _) in
                 guard err==nil else {
                     compition(false)

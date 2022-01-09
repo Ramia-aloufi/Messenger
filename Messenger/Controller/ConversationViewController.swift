@@ -54,10 +54,6 @@ class ConversationViewController: UIViewController {
         tableView.dataSource = self
         title = "Conversation"
         startListiningForConversation()
-//        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
-//            return
-//        }
-//        print(email)
     }
     
     private func startListiningForConversation(){
