@@ -129,7 +129,7 @@ class LoginViewController: UIViewController {
                 return
             }
             let safeEmail = DatabaseManager.safeemail(email: email)
-            DatabaseManager.shared.getdataFor(for: safeEmail) { [weak self](res) in
+            DatabaseManager.shared.getdataFor(for: safeEmail) {(res) in
                 switch res{
                 case .success(let data):
                     guard let userdata = data as? [String:Any] ,

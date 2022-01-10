@@ -63,13 +63,15 @@ class ConversationViewController: UIViewController {
         print("startListiningForConversation:Email:\(email)")
         let safeEmail = DatabaseManager.safeemail(email: email)
         print("startListiningForConversation:safeEmail:\(safeEmail)")
-
+        print("safeEmail:\(safeEmail)")
         DatabaseManager.shared.getAllConversation(for: safeEmail) {[weak self] (res) in
+            print("res:\(res)")
             switch res{
             case .success(let conversation):
                 guard !conversation.isEmpty  else {
                     return
                 }
+                print("conversation success: \(conversation)")
                 self?.conversations = conversation
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
